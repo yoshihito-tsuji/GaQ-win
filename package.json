@@ -1,0 +1,65 @@
+{
+  "name": "gaq-offline-transcriber",
+  "version": "1.0.0",
+  "description": "GaQ オフライン文字起こしツール - OpenAI Whisperを使用したオフライン音声文字起こしツール",
+  "main": "src/main.js",
+  "homepage": "./",
+  "scripts": {
+    "start": "cross-env NODE_OPTIONS=\"--max-old-space-size=4096\" electron . --expose-gc",
+    "dev": "concurrently \"npm run dev-renderer\" \"wait-on http://localhost:3000 && cross-env NODE_ENV=development NODE_OPTIONS=\\\"--max-old-space-size=4096\\\" electron . --expose-gc\"",
+    "dev-renderer": "cd src/renderer && cross-env NODE_OPTIONS=\"--max-old-space-size=2048\" npm start",
+    "build": "cross-env NODE_OPTIONS=\"--max-old-space-size=4096\" npm run build-renderer && electron-builder",
+    "build-renderer": "cd src/renderer && cross-env NODE_OPTIONS=\"--max-old-space-size=2048\" npm run build",
+    "dist": "npm run build",
+    "postinstall": "electron-builder install-app-deps"
+  },
+  "build": {
+    "appId": "com.gaq.offline-transcriber",
+    "productName": "GaQ オフライン文字起こしツール",
+    "directories": {
+      "output": "dist"
+    },
+    "files": [
+      "src/main.js",
+      "src/preload.js",
+      "src/core/**/*",
+      "src/services/**/*",
+      "src/renderer/build/**/*",
+      "src/whisper/**/*",
+      "assets/**/*",
+      "node_modules/**/*"
+    ],
+    "win": {
+      "target": "nsis",
+      "icon": "assets/icon.ico"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "GaQオフライン文字起こし"
+    }
+  },
+  "keywords": [
+    "electron",
+    "transcription",
+    "whisper",
+    "offline",
+    "education",
+    "privacy"
+  ],
+  "author": "GaQ Team",
+  "license": "MIT",
+  "devDependencies": {
+    "concurrently": "^7.6.0",
+    "cross-env": "^7.0.3",
+    "electron": "^22.0.0",
+    "electron-builder": "^23.6.0",
+    "electron-is-dev": "^2.0.0",
+    "wait-on": "^7.0.1"
+  },
+  "dependencies": {
+    "electron-store": "^8.1.0"
+  }
+}
